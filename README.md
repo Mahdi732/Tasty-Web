@@ -1,3 +1,34 @@
+## Tasty Web Test Console
+
+This web app contains a simple real frontend for testing the 3 backend services:
+
+- `userService` (auth)
+- `restaurantService` (restaurant/menu)
+- `orderService` (orders/qr)
+
+### Environment
+
+Copy `.env.example` to `.env.local` and adjust if needed:
+
+- `NEXT_PUBLIC_AUTH_API`
+- `NEXT_PUBLIC_RESTAURANT_API`
+- `NEXT_PUBLIC_ORDER_API`
+
+### Run
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+### What you can test from UI
+
+- Register / verify email / login / profile read
+- Create restaurant / assign staff / publish / archive / restore-fee hook / low-stock hook
+- Create orders for all flow branches, list orders, scan QR
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
