@@ -1,21 +1,22 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import SiteHeader from "./components/SiteHeader";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import SiteHeader from '../components/layout/SiteHeader';
+import SuspendedOverlay from '../components/ui/SuspendedOverlay';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Tasty Backend Test UI",
-  description: "Simple frontend to test Auth, Restaurant, and Order APIs",
+  title: 'Tasty — Dev Console',
+  description: 'Test Auth, Restaurant, and Order APIs through the Tasty API Gateway',
 };
 
 export default function RootLayout({
@@ -24,11 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#09090b] text-gray-100`}
       >
         <SiteHeader />
+        <SuspendedOverlay />
         {children}
       </body>
     </html>
