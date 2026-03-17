@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  --background: #050505;
+  --foreground: #ffffff;
   --accent: #f97316;
   --accent-hover: #fb923c;
-  --surface: #111113;
-  --surface-hover: #18181b;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
-  --text-primary: #f4f4f5;
+  --surface: #111111;
+  --surface-hover: #1a1a1a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --text-primary: #ffffff;
   --text-secondary: #a1a1aa;
   --text-muted: #52525b;
+
+  /* Tasty Red palette */
+  --tasty-red: #dc2626;
+  --tasty-red-light: #ef4444;
+  --tasty-red-dark: #991b1b;
+  --tasty-red-glow: rgba(220, 38, 38, 0.4);
+  --tasty-red-soft: rgba(220, 38, 38, 0.1);
 }
 
 @theme inline {
@@ -71,18 +78,39 @@ body {
 
 /* ─── Animations ────────────────────────────────────── */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.1); }
-  50% { box-shadow: 0 0 40px rgba(249, 115, 22, 0.2); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(249, 115, 22, 0.2);
+  }
 }
 
 .animate-fade-in {
