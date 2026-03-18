@@ -1,11 +1,5 @@
-import { IslandNavbar } from '@/features/navbar/ui/IslandNavbar';
-import { HeroSection } from '@/widgets/hero/ui/HeroSection';
+import { HomeExperience } from '@/widgets/home/ui/HomeExperience';
 
 export default function ConsolePage() {
-  return (
-    <div className="min-h-screen">
-      <IslandNavbar />
-      <HeroSection />
-    </div>
-  );
+  return <HomeExperience />;
 }

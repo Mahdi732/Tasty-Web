@@ -2,17 +2,33 @@
 
 import { motion } from 'framer-motion';
 
-import { HERO_SEQUENCE_TIMING } from '../config/hero.config';
+import { HERO_SEQUENCE_TIMING, type HeroMealScene } from '../config/hero.config';
 import { useFallDistance } from '../model/use-fall-distance';
-import { useHeroSequence } from '../model/use-hero-sequence';
+import { useHeroSequence, type HeroSequencePhase } from '../model/use-hero-sequence';
 import { BackgroundHeadings } from './components/BackgroundHeadings';
 import { MealHero } from './components/MealHero';
 import { HeroContent } from './components/HeroContent';
 import { IngredientLayer } from './components/IngredientLayer';
 
-export const HeroSection = () => {
+interface HeroSectionProps {
+  scene?: HeroMealScene;
+  phase?: HeroSequencePhase;
+  pauseSequence?: boolean;
+  showMeal?: boolean;
+  className?: string;
+}
+
+export const HeroSection = ({
+  scene: sceneOverride,
+  phase: phaseOverride,
+  pauseSequence = false,
+  showMeal = true,
+  className,
+}: HeroSectionProps) => {
   const fallDistance = useFallDistance();
-  const { scene, phase } = useHeroSequence();
+  const localSequence = useHeroSequence({ paused: pauseSequence });
+  const scene = sceneOverride ?? localSequence.scene;
+  const phase = phaseOverride ?? localSequence.phase;
 
   return (
     <motion.section
@@ -21,7 +37,7 @@ export const HeroSection = () => {
         duration: HERO_SEQUENCE_TIMING.backgroundTransitionDuration,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="relative h-screen w-full overflow-hidden"
+      className={`relative h-screen w-full overflow-hidden ${className ?? ''}`.trim()}
     >
       <BackgroundHeadings scene={scene} phase={phase} />
       <IngredientLayer
@@ -31,7 +47,7 @@ export const HeroSection = () => {
         scene={scene}
         phase={phase}
       />
-      <MealHero fallDistance={fallDistance} scene={scene} phase={phase} />
+      {showMeal ? <MealHero fallDistance={fallDistance} scene={scene} phase={phase} /> : null}
       <IngredientLayer
         depth="foreground"
         zIndexClass="z-30"

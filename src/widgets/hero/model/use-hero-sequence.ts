@@ -3,6 +3,11 @@ import { HERO_MEAL_SCENES, HERO_SEQUENCE_TIMING, type HeroMealScene } from '../c
 
 export type HeroSequencePhase = 'enter' | 'hold' | 'exit';
 
+interface UseHeroSequenceOptions {
+  paused?: boolean;
+  forceHoldOnPause?: boolean;
+}
+
 const getPhaseDurationMs = (phase: HeroSequencePhase) => {
   if (phase === 'enter') {
     return HERO_SEQUENCE_TIMING.entryDuration * 1000;
@@ -13,11 +18,15 @@ const getPhaseDurationMs = (phase: HeroSequencePhase) => {
   return HERO_SEQUENCE_TIMING.exitDuration * 1000;
 };
 
-export const useHeroSequence = () => {
+export const useHeroSequence = ({ paused = false, forceHoldOnPause = true }: UseHeroSequenceOptions = {}) => {
   const [phase, setPhase] = useState<HeroSequencePhase>('enter');
   const [sceneIndex, setSceneIndex] = useState(0);
 
   useEffect(() => {
+    if (paused) {
+      return;
+    }
+
     const timeoutId = window.setTimeout(() => {
       if (phase === 'enter') {
         setPhase('hold');
@@ -34,12 +43,13 @@ export const useHeroSequence = () => {
     }, getPhaseDurationMs(phase));
 
     return () => window.clearTimeout(timeoutId);
-  }, [phase]);
+  }, [phase, paused]);
 
   const scene: HeroMealScene = useMemo(() => HERO_MEAL_SCENES[sceneIndex], [sceneIndex]);
+  const resolvedPhase: HeroSequencePhase = paused && forceHoldOnPause ? 'hold' : phase;
 
   return {
-    phase,
+    phase: resolvedPhase,
     scene,
     sceneIndex,
   };
