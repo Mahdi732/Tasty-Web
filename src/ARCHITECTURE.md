@@ -1,34 +1,56 @@
-# Frontend Architecture (Microservice-Aligned)
+# Frontend Architecture (Clean Modular)
 
-This frontend uses feature/domain separation so UI can scale with backend microservices.
+This frontend follows a flat, modular structure focused on separation of concerns for the Main Page.
 
-## Layers
+## Top-Level Folders
 
-- `app/`: Next.js route entrypoints only.
-- `widgets/`: Page-level compositions (hero blocks, dashboards, sections).
-- `features/`: User-facing behavior units (navbar morph, auth forms, order placement flow).
-- `entities/`: Domain API modules aligned with backend services (`user`, `restaurant`, `order`, `notification`).
-- `shared/`: Cross-cutting code (`api` client, config, constants, utilities).
+- `app/`: Next.js route entrypoints and global app wiring.
+- `pages/`: high-level view assemblies.
+- `components/`: reusable UI building blocks.
+- `services/`: business logic and shared helpers.
+- `api/`: centralized backend communication and endpoint definitions.
 
-## Current Navbar Implementation
+## Main Page Composition
 
-- `features/navbar/ui/IslandNavbar.tsx`: visual component and motion islands.
-- `features/navbar/model/useNavbarMorph.ts`: scroll threshold and morph state.
-- `features/navbar/config/navbar.config.ts`: links and thresholds.
+- `pages/MainPage/UI.tsx`: assembles `Navbar`, `HeroSection`, and `AboutSection`.
+- `pages/MainPage/Logic.ts`: page state and section coordination.
+- `pages/MainPage/Animation.ts`: page-level motion orchestration.
+- `pages/MainPage/Config.ts`: page-local constants.
 
-## API Boundaries
+## Component Blueprint (Strict)
 
-- `entities/user/api`: user/auth profile calls.
-- `entities/restaurant/api`: restaurant-related calls.
-- `entities/order/api`: order lifecycle calls.
-- `entities/notification/api`: realtime socket connection.
+Each folder under `components/` follows exactly this separation:
 
-All domain APIs consume shared transport from:
-- `shared/api/http/client.ts`
+- `UI.tsx`: visual layout only.
+- `Logic.ts`: state, handlers, and data integration.
+- `Animation.ts`: motion and transition behavior.
+- `Config.ts`: local constants/content for that component.
 
-## Why this structure works with microservices
+Current components:
 
-- Backend service changes stay localized in corresponding `entities/*/api` modules.
-- Feature code stays focused on UX and interaction only.
-- Route files remain thin and maintainable.
-- Easier onboarding and debugging: start at route -> widget -> feature -> entity API.
+- `components/Navbar`
+- `components/HeroSection`
+- `components/AboutSection`
+
+## Services
+
+- `services/hero/useHeroSequence.ts`
+- `services/layout/useFallDistance.ts`
+- `services/navbar/useNavbarMorph.ts`
+- `services/utils/random.ts`
+
+## API
+
+- `api/endpoints.ts`
+- `api/client.ts`
+
+## Removed Legacy Structure
+
+The old architecture folders have been removed:
+
+- `widgets/`
+- `features/`
+- `entities/`
+- `shared/`
+
+This keeps navigation simple and predictable for all developers.

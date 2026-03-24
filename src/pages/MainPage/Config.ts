@@ -1,0 +1,2 @@
+export const MAIN_PAGE_BACKGROUND = '#c81f25';
+export const MAIN_PAGE_DETACH_THRESHOLD = 0.035;
