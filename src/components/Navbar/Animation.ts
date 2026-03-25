@@ -5,4 +5,5 @@ export const NAVBAR_TRANSITIONS = {
   island: { duration: 0.55, ease: NAVBAR_MOTION_EASE },
   reveal: { duration: 0.34, ease: NAVBAR_MOTION_EASE },
   contentSwap: { duration: 0.24 },
+  popup: { duration: 0.26, ease: NAVBAR_MOTION_EASE },
 } as const;

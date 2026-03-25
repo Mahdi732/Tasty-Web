@@ -87,9 +87,11 @@ export const ABOUT_CATEGORIES: readonly AboutCategory[] = [
 
 export const ABOUT_FOOTER_TAGLINE = 'TASTY / CRAFTED FOR BOLD TASTE';
 
-export const ABOUT_STAGE_PIN_SCROLL_PX = 8000;
+export const ABOUT_STAGE_PIN_SCROLL_PX = 6000;
 export const ABOUT_STEP_SCROLL_EFFORT_PX = 1000;
 export const ABOUT_STEP_DWELL_MS = 1000;
+export const ABOUT_INTERACTION_START_PROGRESS = 0.6;
+export const ABOUT_FIRST_STEP_HOLD_MULTIPLIER = 1.35;
 
 export const ABOUT_REVEAL_TIMING = {
   ingredientCleanupStart: 0.48,
