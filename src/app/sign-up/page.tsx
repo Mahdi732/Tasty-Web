@@ -1,55 +1,48 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Oswald, Plus_Jakarta_Sans } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 
-const headingFont = Oswald({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-});
-
-const bodyFont = Plus_Jakarta_Sans({
+const outfit = Outfit({
   subsets: ['latin'],
   weight: ['500', '600', '700', '800'],
 });
 
 export default function SignUpPage() {
   return (
-    <main className={`${bodyFont.className} relative min-h-screen overflow-hidden bg-[#0f0907] px-4 py-6 text-white sm:px-8 sm:py-10`}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_12%,rgba(253,111,43,0.24),transparent_35%),radial-gradient(circle_at_84%_20%,rgba(177,20,41,0.28),transparent_42%),linear-gradient(132deg,#0f0907_0%,#1a0f0b_44%,#130b08_100%)]" />
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-full opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:28px_28px]" />
+    <main className={`${outfit.className} relative min-h-screen overflow-hidden bg-[#c81f25] px-4 py-6 text-white sm:px-8 sm:py-10`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.2),transparent_28%),radial-gradient(circle_at_86%_18%,rgba(255,153,105,0.22),transparent_30%)]" />
 
-      <div className="relative mx-auto max-w-7xl">
-        <div className="mb-5 flex items-center justify-between">
-          <Link href="/" className="text-xs font-bold uppercase tracking-[0.22em] text-white/70 transition hover:text-white">
-            Back Home
-          </Link>
-          <Link href="/sign-in" className="text-xs font-bold uppercase tracking-[0.22em] text-[#ffd5bc] transition hover:text-white">
-            Already have an account? Sign In
-          </Link>
+      <div className="relative mx-auto max-w-6xl">
+        <div className="mb-6 rounded-full border border-white/20 bg-white/8 px-4 py-3 backdrop-blur-2xl sm:px-6">
+          <div className="flex items-center justify-between gap-3">
+            <Link href="/" className="text-xl font-extrabold tracking-tight text-white">
+              Tasty<span className="text-[#b10f18]">.</span>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/" className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/90 hover:bg-white/10">
+                Home
+              </Link>
+              <Link href="/sign-in" className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#a31116]">
+                Sign In
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <section className="grid overflow-hidden rounded-[2.2rem] border border-white/18 bg-[#1a0f0b]/90 shadow-[0_36px_90px_rgba(0,0,0,0.52)] backdrop-blur-xl lg:grid-cols-[1.02fr_0.98fr]">
+        <section className="grid overflow-hidden rounded-[2rem] border border-white/20 bg-white/10 shadow-[0_28px_80px_rgba(56,14,10,0.4)] backdrop-blur-2xl lg:grid-cols-[1fr_1fr]">
           <div className="p-6 sm:p-8 lg:p-10">
-            <div className="animate-fade-in rounded-full border border-[#ffb78f]/30 bg-[#ff6b2a]/14 px-4 py-2 text-[0.62rem] font-extrabold uppercase tracking-[0.24em] text-[#ffd2b8]" style={{ animationDelay: '60ms' }}>
-              Join Today and Get a New Member Reward
-            </div>
-
-            <p className="animate-fade-in mt-6 text-[0.7rem] font-bold uppercase tracking-[0.3em] text-[#ffc7a8]/90" style={{ animationDelay: '120ms' }}>
-              Start Better Ordering
-            </p>
-
-            <h1 className={`${headingFont.className} animate-slide-up mt-3 text-5xl uppercase leading-[0.94] tracking-[0.05em] text-[#fff3e8] sm:text-6xl lg:text-7xl`} style={{ animationDelay: '180ms' }}>
-              Create Account
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-white/80">Create Account</p>
+            <h1 className="mt-3 text-5xl font-black uppercase leading-[0.92] tracking-[0.08em] text-white sm:text-6xl">
+              Sign Up
             </h1>
-
-            <p className="animate-fade-in mt-4 max-w-xl text-sm leading-7 text-[#f8d8c5]/84 sm:text-base" style={{ animationDelay: '230ms' }}>
-              Build your Tasty profile in less than a minute to unlock personalized picks, saved addresses, and repeat-order speed.
+            <p className="mt-4 max-w-xl text-sm leading-7 text-white/85 sm:text-base">
+              Join Tasty to save your meals, track orders, and unlock member offers instantly.
             </p>
 
-            <div className="animate-fade-in mt-6 grid gap-3 sm:grid-cols-2" style={{ animationDelay: '260ms' }}>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/22 bg-white/10 px-4 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-white transition hover:scale-[1.015] hover:bg-white/18"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-white/20"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
                   <path d="M21.6 12.23c0-.77-.07-1.5-.2-2.2H12v4.16h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.9-1.75 3-4.33 3-7.48Z" />
@@ -57,29 +50,29 @@ export default function SignUpPage() {
                   <path d="M6.39 13.88a6 6 0 0 1 0-3.76v-2.6H3.05a10 10 0 0 0 0 8.96l3.34-2.6Z" />
                   <path d="M12 6.02c1.47 0 2.8.5 3.85 1.5l2.88-2.88A9.7 9.7 0 0 0 12 2 10 10 0 0 0 3.05 7.52l3.34 2.6C7.18 7.78 9.39 6.02 12 6.02Z" />
                 </svg>
-                Continue with Google
+                Google
               </button>
 
               <button
                 type="button"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/18 bg-[#1877f2]/88 px-4 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-white transition hover:scale-[1.015] hover:bg-[#1877f2]"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/18 bg-[#1877f2] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:brightness-110"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
                   <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.87 3.77-3.87 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.62.77-1.62 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12Z" />
                 </svg>
-                Continue with Facebook
+                Facebook
               </button>
             </div>
 
             <div className="my-6 flex items-center gap-3">
               <span className="h-px flex-1 bg-white/14" />
-              <span className="text-[0.62rem] font-bold uppercase tracking-[0.24em] text-white/60">Or register by email</span>
+              <span className="text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-white/70">Or register by email</span>
               <span className="h-px flex-1 bg-white/14" />
             </div>
 
             <form className="space-y-4">
               <div>
-                <label htmlFor="fullName" className="mb-2 block text-[0.64rem] font-extrabold uppercase tracking-[0.24em] text-[#ffd0b5]/92">
+                <label htmlFor="fullName" className="mb-2 block text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-white/85">
                   Full Name
                 </label>
                 <input
@@ -87,13 +80,13 @@ export default function SignUpPage() {
                   name="fullName"
                   type="text"
                   required
-                  className="w-full rounded-xl border border-white/18 bg-white/7 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none transition focus:border-[#ff9e73]"
+                  className="w-full rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/55 outline-none transition focus:border-white/50"
                   placeholder="Your full name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-2 block text-[0.64rem] font-extrabold uppercase tracking-[0.24em] text-[#ffd0b5]/92">
+                <label htmlFor="email" className="mb-2 block text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-white/85">
                   Email
                 </label>
                 <input
@@ -101,14 +94,14 @@ export default function SignUpPage() {
                   name="email"
                   type="email"
                   required
-                  className="w-full rounded-xl border border-white/18 bg-white/7 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none transition focus:border-[#ff9e73]"
+                  className="w-full rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/55 outline-none transition focus:border-white/50"
                   placeholder="you@example.com"
                 />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="password" className="mb-2 block text-[0.64rem] font-extrabold uppercase tracking-[0.24em] text-[#ffd0b5]/92">
+                  <label htmlFor="password" className="mb-2 block text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-white/85">
                     Password
                   </label>
                   <input
@@ -116,13 +109,13 @@ export default function SignUpPage() {
                     name="password"
                     type="password"
                     required
-                    className="w-full rounded-xl border border-white/18 bg-white/7 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none transition focus:border-[#ff9e73]"
+                    className="w-full rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/55 outline-none transition focus:border-white/50"
                     placeholder="Create password"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="mb-2 block text-[0.64rem] font-extrabold uppercase tracking-[0.24em] text-[#ffd0b5]/92">
+                  <label htmlFor="confirmPassword" className="mb-2 block text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-white/85">
                     Confirm
                   </label>
                   <input
@@ -130,7 +123,7 @@ export default function SignUpPage() {
                     name="confirmPassword"
                     type="password"
                     required
-                    className="w-full rounded-xl border border-white/18 bg-white/7 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none transition focus:border-[#ff9e73]"
+                    className="w-full rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/55 outline-none transition focus:border-white/50"
                     placeholder="Repeat password"
                   />
                 </div>
@@ -143,58 +136,34 @@ export default function SignUpPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-full bg-[linear-gradient(135deg,#cb1523_0%,#ff5e2b_100%)] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.24em] text-white shadow-[0_18px_40px_rgba(219,64,28,0.48)] transition hover:brightness-110"
+                className="w-full rounded-full bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.22em] text-[#a31116] transition hover:bg-white/90"
               >
                 Create My Account
               </button>
 
               <Link
                 href="/verify-email"
-                className="block text-center text-xs font-bold uppercase tracking-[0.2em] text-[#ffd1b7] transition hover:text-white"
+                className="block text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/85 transition hover:text-white"
               >
                 Already got a code? Verify Email
               </Link>
             </form>
-
-            <div className="mt-5 grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-xl border border-white/14 bg-white/6 px-3 py-2">
-                <p className="text-sm font-extrabold text-white">3 steps</p>
-                <p className="text-[0.58rem] uppercase tracking-[0.2em] text-white/60">Setup Time</p>
-              </div>
-              <div className="rounded-xl border border-white/14 bg-white/6 px-3 py-2">
-                <p className="text-sm font-extrabold text-white">100%</p>
-                <p className="text-[0.58rem] uppercase tracking-[0.2em] text-white/60">Free Signup</p>
-              </div>
-              <div className="rounded-xl border border-white/14 bg-white/6 px-3 py-2">
-                <p className="text-sm font-extrabold text-white">24/7</p>
-                <p className="text-[0.58rem] uppercase tracking-[0.2em] text-white/60">Support</p>
-              </div>
-            </div>
           </div>
 
           <div className="relative min-h-[280px] border-t border-white/14 lg:min-h-full lg:border-t-0 lg:border-l">
             <Image src="/auth.jpg" alt="Tasty food and onboarding experience" fill className="object-cover" priority sizes="(min-width: 1024px) 46vw, 100vw" />
-            <div className="absolute inset-0 bg-[linear-gradient(155deg,rgba(18,10,7,0.14)_0%,rgba(18,10,7,0.76)_62%,rgba(18,10,7,0.92)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(200,31,37,0.1)_0%,rgba(49,20,17,0.72)_62%,rgba(36,16,14,0.86)_100%)]" />
 
             <div className="absolute left-5 right-5 top-5 rounded-2xl border border-white/20 bg-black/32 p-4 backdrop-blur-xl sm:left-8 sm:right-8 sm:top-8 sm:p-5">
-              <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.24em] text-[#ffd2b8]">Member Privileges</p>
-              <h2 className={`${headingFont.className} mt-2 text-3xl uppercase leading-[0.95] tracking-[0.05em] text-white sm:text-4xl`}>
-                Rewards,
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-white/80">Tasty Member Access</p>
+              <h2 className="mt-2 text-3xl font-black uppercase leading-[0.95] tracking-[0.05em] text-white sm:text-4xl">
+                Fresh Meals,
                 <br />
-                Faster Reorders
+                One Account
               </h2>
               <p className="mt-3 text-sm leading-6 text-white/84">
-                Build your profile and instantly save favorite meals for one-tap checkout on future visits.
+                Create your account and unlock saved addresses, faster ordering, and personalized suggestions.
               </p>
-            </div>
-
-            <div className="absolute inset-x-5 bottom-5 grid gap-2 sm:inset-x-8 sm:bottom-8">
-              <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.2em] text-white/92 backdrop-blur-xl">
-                Exclusive member-only promo drops
-              </div>
-              <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.2em] text-white/92 backdrop-blur-xl">
-                Real-time order timeline and updates
-              </div>
             </div>
           </div>
         </section>
