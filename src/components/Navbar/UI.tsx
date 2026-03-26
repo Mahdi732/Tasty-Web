@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
 import { Outfit } from 'next/font/google';
 import { NAV_LINKS } from './Config';
 import { useNavbarLogic } from './Logic';
@@ -15,7 +16,7 @@ export const Navbar = () => {
   const { isCollapsed, isMenuOpen, toggleMenu, closeMenu } = useNavbarLogic();
 
   return (
-    <div className={`${outfit.className} pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4 sm:top-6`}>
+    <div className={`${outfit.className} pointer-events-none fixed inset-x-0 top-4 z-50 flex px-4 sm:top-6 ${isCollapsed ? 'justify-start' : 'justify-center'}`}>
       {isCollapsed ? (
         <div className="pointer-events-auto relative">
           <motion.button
@@ -47,7 +48,7 @@ export const Navbar = () => {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: -8, scale: 0.96 }}
                 transition={NAVBAR_TRANSITIONS.popup}
-                className="absolute left-full top-1/2 ml-3 w-[250px] -translate-y-1/2 rounded-2xl border border-white/20 bg-[#2b1d16]/90 p-3 shadow-[0_16px_38px_rgba(0,0,0,0.36)] backdrop-blur-2xl"
+                className="absolute left-full top-full ml-3 mt-2 max-h-[calc(100vh-2.5rem)] w-[250px] overflow-y-auto rounded-2xl border border-white/20 bg-[#2b1d16]/90 p-3 shadow-[0_16px_38px_rgba(0,0,0,0.36)] backdrop-blur-2xl"
               >
                 <div className="mb-2 flex items-center justify-between px-1">
                   <span className="text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-white/70">Menu</span>
@@ -74,20 +75,20 @@ export const Navbar = () => {
                 </div>
 
                 <div className="mt-3 flex gap-2">
-                  <button
-                    type="button"
+                  <Link
+                    href="/sign-in"
                     onClick={closeMenu}
-                    className="flex-1 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-white/10"
+                    className="flex-1 rounded-full px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-white/10"
                   >
                     Sign In
-                  </button>
-                  <button
-                    type="button"
+                  </Link>
+                  <Link
+                    href="/sign-up"
                     onClick={closeMenu}
-                    className="flex-1 rounded-full bg-[#9f1118] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+                    className="flex-1 rounded-full bg-[#9f1118] px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white"
                   >
                     Sign Up
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             )}
@@ -153,18 +154,18 @@ export const Navbar = () => {
               transition={NAVBAR_TRANSITIONS.reveal}
               className="flex h-14 items-center gap-2 rounded-full bg-white/5 px-3 backdrop-blur-2xl"
             >
-              <button
-                type="button"
+              <Link
+                href="/sign-in"
                 className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
               >
                 Sign In
-              </button>
-              <button
-                type="button"
+              </Link>
+              <Link
+                href="/sign-up"
                 className="rounded-full bg-[#9f1118] px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
               >
                 Sign Up
-              </button>
+              </Link>
             </motion.div>
           </div>
         </motion.nav>
