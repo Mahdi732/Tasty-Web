@@ -147,6 +147,13 @@ export default function SignUpPage() {
               >
                 Already got a code? Verify Email
               </Link>
+
+              <Link
+                href="/verify-phone"
+                className="block text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/85 transition hover:text-white"
+              >
+                Verify by Phone Instead
+              </Link>
             </form>
           </div>
 
