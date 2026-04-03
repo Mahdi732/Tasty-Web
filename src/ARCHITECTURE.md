@@ -5,17 +5,17 @@ This frontend follows a flat, modular structure focused on separation of concern
 ## Top-Level Folders
 
 - `app/`: Next.js route entrypoints and global app wiring.
-- `pages/`: high-level view assemblies.
+- `views/`: high-level view assemblies.
 - `components/`: reusable UI building blocks.
 - `services/`: business logic and shared helpers.
 - `api/`: centralized backend communication and endpoint definitions.
 
 ## Main Page Composition
 
-- `pages/MainPage/UI.tsx`: assembles `Navbar`, `HeroSection`, and `AboutSection`.
-- `pages/MainPage/Logic.ts`: page state and section coordination.
-- `pages/MainPage/Animation.ts`: page-level motion orchestration.
-- `pages/MainPage/Config.ts`: page-local constants.
+- `views/MainPage/UI.tsx`: assembles `Navbar`, `HeroSection`, and `AboutSection`.
+- `views/MainPage/Logic.ts`: page state and section coordination.
+- `views/MainPage/Animation.ts`: page-level motion orchestration.
+- `views/MainPage/Config.ts`: page-local constants.
 
 ## Component Blueprint (Strict)
 
