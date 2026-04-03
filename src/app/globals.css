@@ -3,8 +3,8 @@
 :root {
   --background: #050505;
   --foreground: #ffffff;
-  --accent: #f97316;
-  --accent-hover: #fb923c;
+  --accent: #c61a22;
+  --accent-hover: #a8131a;
   --surface: #111111;
   --surface-hover: #1a1a1a;
   --border: rgba(255, 255, 255, 0.08);
@@ -19,6 +19,11 @@
   --tasty-red-dark: #991b1b;
   --tasty-red-glow: rgba(220, 38, 38, 0.4);
   --tasty-red-soft: rgba(220, 38, 38, 0.1);
+
+  --tasty-page-gradient: radial-gradient(circle at top, #4a1311 0%, #170908 50%, #09090b 100%);
+  --tasty-card-bg: rgba(7, 7, 9, 0.42);
+  --tasty-card-border: rgba(255, 255, 255, 0.12);
+  --tasty-text-soft: #f4cfc0;
 }
 
 @theme inline {
@@ -58,15 +63,121 @@ body {
 
 /* ─── Selection ─────────────────────────────────────── */
 ::selection {
-  background: rgba(249, 115, 22, 0.3);
+  background: rgba(198, 26, 34, 0.35);
   color: #fff;
 }
 
 /* ─── Focus reset for a11y ──────────────────────────── */
 *:focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.5);
+  outline: 2px solid rgba(198, 26, 34, 0.6);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* ─── Shared Tasty Theme Primitives ────────────────── */
+.tasty-app-bg {
+  min-height: 100vh;
+  background: var(--tasty-page-gradient);
+  color: var(--text-primary);
+}
+
+.tasty-shell {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 6rem 1rem 4rem;
+}
+
+.tasty-panel {
+  border: 1px solid var(--tasty-card-border);
+  background: var(--tasty-card-bg);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(10px);
+}
+
+.tasty-kicker {
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: #ffccbc;
+}
+
+.tasty-title {
+  margin-top: 0.75rem;
+  font-size: clamp(2rem, 4.8vw, 3.2rem);
+  line-height: 0.95;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff4ed;
+}
+
+.tasty-subtitle {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--tasty-text-soft);
+}
+
+.tasty-btn-primary {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0.7rem 1.2rem;
+  transition: background-color 180ms ease;
+}
+
+.tasty-btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.tasty-btn-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 0.65rem 1.05rem;
+}
+
+.tasty-input {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.28);
+  color: #ffffff;
+  padding: 0.72rem 0.9rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.tasty-input::placeholder {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.tasty-alert-error {
+  border-radius: 1rem;
+  border: 1px solid rgba(244, 143, 146, 0.35);
+  background: rgba(87, 20, 24, 0.35);
+  color: #ffd7d8;
+  padding: 0.75rem 1rem;
+}
+
+.tasty-alert-success {
+  border-radius: 1rem;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  background: rgba(6, 78, 59, 0.2);
+  color: #d1fae5;
+  padding: 0.75rem 1rem;
 }
 
 /* ─── Smooth transitions ────────────────────────────── */
