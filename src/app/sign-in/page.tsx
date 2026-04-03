@@ -1,6 +1,18 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Outfit } from 'next/font/google';
+import { useRouter } from 'next/navigation';
+import { useState, type FormEvent } from 'react';
+import { ApiRequestError } from '@/api/client';
+import { OAuthProviderButtons } from '@/components/auth/OAuthProviderButtons';
+import { fetchMyProfile, loginUser, startEmailVerification, startOAuthLogin } from '@/services/auth/api';
+import { getReadableAuthError, reportAuthError } from '@/services/auth/error-messages';
+import { getLifecycleRoute } from '@/services/auth/lifecycle';
+import { useAuthStore } from '@/services/auth/store';
+import { useRequireGuest } from '@/services/auth/hooks';
+import { fetchMyDebtStatus } from '@/services/commerce/api';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -8,9 +20,102 @@ const outfit = Outfit({
 });
 
 export default function SignInPage() {
+  const router = useRouter();
+  const setSession = useAuthStore((state) => state.setSession);
+  const setAccountDebtLock = useAuthStore((state) => state.setAccountDebtLock);
+  const setPendingRegistration = useAuthStore((state) => state.setPendingRegistration);
+
+  const { hydrated, isAuthenticated } = useRequireGuest('/');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOAuthSubmitting, setIsOAuthSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleOAuthStart = (provider: 'google' | 'facebook') => {
+    void (async () => {
+      setErrorMessage('');
+      setIsOAuthSubmitting(true);
+
+      try {
+        await startOAuthLogin({ provider, mode: 'login', platform: 'web' });
+      } catch (error) {
+        reportAuthError('sign-in.oauth.start', error);
+        const message = getReadableAuthError(error, 'Unable to start OAuth login.');
+        setErrorMessage(message);
+        setIsOAuthSubmitting(false);
+      }
+    })();
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    void (async () => {
+      event.preventDefault();
+      setErrorMessage('');
+      setIsSubmitting(true);
+
+      try {
+        const data = await loginUser({
+          email: email.trim().toLowerCase(),
+          password,
+        });
+
+        const profile = await fetchMyProfile(data.accessToken);
+        setSession(profile, data.accessToken);
+
+        const debtStatus = await fetchMyDebtStatus(data.accessToken);
+        setAccountDebtLock(debtStatus);
+        if (debtStatus.hasOutstandingDebt) {
+          router.replace('/account-locked');
+          return;
+        }
+
+        const nextRoute = getLifecycleRoute(profile);
+        if (nextRoute.startsWith('/verify-email')) {
+          setPendingRegistration({
+            email: email.trim().toLowerCase(),
+            password,
+            phoneNumber: profile.phoneNumber || '',
+            nickname: profile.nickname || undefined,
+          });
+        }
+
+        router.replace(nextRoute);
+      } catch (error) {
+        if (error instanceof ApiRequestError && error.code === 'EMAIL_NOT_VERIFIED') {
+          const normalizedEmail = email.trim().toLowerCase();
+          setPendingRegistration({
+            email: normalizedEmail,
+            password,
+            phoneNumber: '',
+          });
+
+          try {
+            await startEmailVerification(normalizedEmail);
+          } catch {
+            // Keep navigation even if resend fails; user can retry from verification page.
+          }
+
+          router.replace('/verify-email?step=1');
+          return;
+        }
+
+        reportAuthError('sign-in.submit', error);
+        const message = getReadableAuthError(error, 'Unable to sign in.');
+        setErrorMessage(message);
+      } finally {
+        setIsSubmitting(false);
+      }
+    })();
+  };
+
+  if (!hydrated || isAuthenticated) {
+    return null;
+  }
+
   return (
-    <main className={`${outfit.className} relative min-h-screen overflow-hidden bg-[#c81f25] px-4 py-6 text-white sm:px-8 sm:py-10`}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.2),transparent_28%),radial-gradient(circle_at_86%_18%,rgba(255,153,105,0.22),transparent_30%)]" />
+    <main className={`${outfit.className} relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_14%_10%,#4c120f_0%,#220b0a_44%,#09090b_100%)] px-4 py-6 text-white sm:px-8 sm:py-10`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(255,255,255,0.16),transparent_28%),radial-gradient(circle_at_88%_18%,rgba(233,88,64,0.18),transparent_34%)]" />
 
       <div className="relative mx-auto max-w-6xl">
         <div className="mb-6 rounded-full border border-white/20 bg-white/8 px-4 py-3 backdrop-blur-2xl sm:px-6">
@@ -39,30 +144,11 @@ export default function SignInPage() {
               Access your orders, rewards, favorites, and fast checkout from your Tasty account.
             </p>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-white/20"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-                  <path d="M21.6 12.23c0-.77-.07-1.5-.2-2.2H12v4.16h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.9-1.75 3-4.33 3-7.48Z" />
-                  <path d="M12 22c2.7 0 4.97-.9 6.63-2.44l-3.23-2.5c-.9.6-2.04.95-3.4.95-2.61 0-4.82-1.76-5.61-4.13H3.05v2.6A10 10 0 0 0 12 22Z" />
-                  <path d="M6.39 13.88a6 6 0 0 1 0-3.76v-2.6H3.05a10 10 0 0 0 0 8.96l3.34-2.6Z" />
-                  <path d="M12 6.02c1.47 0 2.8.5 3.85 1.5l2.88-2.88A9.7 9.7 0 0 0 12 2 10 10 0 0 0 3.05 7.52l3.34 2.6C7.18 7.78 9.39 6.02 12 6.02Z" />
-                </svg>
-                Google
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/18 bg-[#1877f2] px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:brightness-110"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-                  <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.87 3.77-3.87 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.62.77-1.62 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12Z" />
-                </svg>
-                Facebook
-              </button>
-            </div>
+            <OAuthProviderButtons
+              onStart={handleOAuthStart}
+              disabled={isSubmitting || isOAuthSubmitting}
+              isLoading={isOAuthSubmitting}
+            />
 
             <div className="my-6 flex items-center gap-3">
               <span className="h-px flex-1 bg-white/14" />
@@ -70,7 +156,7 @@ export default function SignInPage() {
               <span className="h-px flex-1 bg-white/14" />
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="mb-2 block text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-white/85">
                   Email
@@ -80,6 +166,8 @@ export default function SignInPage() {
                   name="email"
                   type="email"
                   required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                   className="w-full rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/55 outline-none transition focus:border-white/50"
                   placeholder="you@example.com"
                 />
@@ -94,10 +182,16 @@ export default function SignInPage() {
                   name="password"
                   type="password"
                   required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   className="w-full rounded-xl border border-white/24 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/55 outline-none transition focus:border-white/50"
                   placeholder="Enter your password"
                 />
               </div>
+
+              {errorMessage ? (
+                <p className="text-sm font-semibold text-[#ffe6d8]">{errorMessage}</p>
+              ) : null}
 
               <div className="flex items-center justify-between">
                 <label className="inline-flex items-center gap-2 text-xs text-white/72">
@@ -111,9 +205,10 @@ export default function SignInPage() {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full rounded-full bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.22em] text-[#a31116] transition hover:bg-white/90"
               >
-                Sign In Now
+                {isSubmitting ? 'Signing In...' : 'Sign In Now'}
               </button>
             </form>
           </div>
