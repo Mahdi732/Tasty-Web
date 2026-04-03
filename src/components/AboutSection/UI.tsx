@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
+
 import { AnimatePresence, motion, useMotionTemplate, useTransform, type MotionValue } from 'framer-motion';
 import type { RefObject } from 'react';
 import { ABOUT_CATEGORIES, ABOUT_FOOTER_TAGLINE, ABOUT_STAGE_PIN_SCROLL_PX } from './Config';

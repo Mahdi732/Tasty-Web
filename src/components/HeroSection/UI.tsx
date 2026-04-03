@@ -1,6 +1,9 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
+
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import {
   HERO_BURGER_ENTRY_SPRING,
   HERO_BURGER_EXIT_EASE,
@@ -16,6 +19,8 @@ import {
 import { buildIngredientMotion, type IngredientDepth } from './Animation';
 import { useHeroSectionLogic } from './Logic';
 import type { HeroSequencePhase } from '@/services/hero/useHeroSequence';
+import { useAuthStore } from '@/services/auth/store';
+import { getLifecycleRoute, isAccountFullyVerified } from '@/services/auth/lifecycle';
 
 interface HeroSectionProps {
   scene?: HeroMealScene;
@@ -86,6 +91,9 @@ export const HeroSection = ({
   showMeal = true,
   className,
 }: HeroSectionProps) => {
+  const router = useRouter();
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const user = useAuthStore((state) => state.user);
   const { fallDistance, scene, phase } = useHeroSectionLogic({
     scene: sceneOverride,
     phase: phaseOverride,
@@ -93,6 +101,27 @@ export const HeroSection = ({
   });
 
   const isExiting = phase === 'exit';
+  const isVerified = isAccountFullyVerified(user);
+  const lifecycleRoute = getLifecycleRoute(user);
+  const continueVerificationRoute = lifecycleRoute === '/' ? '/verify-email?step=1' : lifecycleRoute;
+
+  const handlePrimaryAction = () => {
+    if (!accessToken) {
+      router.push('/sign-in');
+      return;
+    }
+
+    if (!isVerified) {
+      router.push(continueVerificationRoute);
+      return;
+    }
+
+    router.push('/dashboard');
+  };
+
+  const primaryActionLabel = !accessToken
+    ? 'Sign In to Order'
+    : (isVerified ? HERO_ORDER_BUTTON_LABEL : 'Complete Verification');
 
   return (
     <motion.section
@@ -172,9 +201,10 @@ export const HeroSection = ({
 
           <button
             type="button"
+            onClick={handlePrimaryAction}
             className="inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-semibold tracking-wide text-[#a31116]"
           >
-            {HERO_ORDER_BUTTON_LABEL}
+            {primaryActionLabel}
           </button>
         </div>
 
