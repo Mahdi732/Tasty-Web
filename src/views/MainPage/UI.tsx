@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Navbar } from '@/components/Navbar/UI';
 import { HeroSection } from '@/components/HeroSection/UI';
 import { AboutSection } from '@/components/AboutSection/UI';
 import { MAIN_PAGE_BACKGROUND } from './Config';
@@ -34,7 +33,6 @@ export const MainPage = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: MAIN_PAGE_BACKGROUND }}>
-      <Navbar />
       <HeroSection scene={scene} phase={phase} pauseSequence={isMealDetached} showMeal={false} />
 
       <div className="pointer-events-none fixed inset-0 z-[35] flex items-center justify-center">

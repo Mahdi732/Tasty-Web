@@ -3,7 +3,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { Outfit } from 'next/font/google';
-import { NAV_LINKS } from './Config';
+import { LogOut, UserRound } from 'lucide-react';
+import { getStatusLabel } from '@/services/auth/lifecycle';
 import { useNavbarLogic } from './Logic';
 import { NAVBAR_TRANSITIONS } from './Animation';
 
@@ -13,7 +14,24 @@ const outfit = Outfit({
 });
 
 export const Navbar = () => {
-  const { isCollapsed, isMenuOpen, toggleMenu, closeMenu } = useNavbarLogic();
+  const {
+    hydrated,
+    user,
+    isAuthenticated,
+    visibleLinks,
+    accountEntryHref,
+    accountEntryLabel,
+    isCollapsed,
+    isMenuOpen,
+    toggleMenu,
+    closeMenu,
+    logout,
+  } = useNavbarLogic();
+
+  const showAuthenticated = hydrated && isAuthenticated;
+  const userLabel = user?.nickname || user?.email?.split('@')[0] || 'Account';
+  const userInitial = userLabel.slice(0, 1).toUpperCase();
+  const statusLabel = getStatusLabel(user?.status);
 
   return (
     <div className={`${outfit.className} pointer-events-none fixed inset-x-0 top-4 z-50 flex px-4 sm:top-6 ${isCollapsed ? 'justify-start' : 'justify-center'}`}>
@@ -62,34 +80,63 @@ export const Navbar = () => {
                 </div>
 
                 <div className="space-y-1">
-                  {NAV_LINKS.map((item) => (
-                    <a
+                  {visibleLinks.map((item) => (
+                    <Link
                       key={item.label}
                       href={item.href}
                       onClick={closeMenu}
                       className="block rounded-xl px-3 py-2 text-[0.78rem] font-medium uppercase tracking-[0.22em] text-white/90 hover:bg-white/10"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
 
-                <div className="mt-3 flex gap-2">
-                  <Link
-                    href="/sign-in"
-                    onClick={closeMenu}
-                    className="flex-1 rounded-full px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-white/10"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/sign-up"
-                    onClick={closeMenu}
-                    className="flex-1 rounded-full bg-[#9f1118] px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
+                {showAuthenticated ? (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center gap-2 rounded-xl bg-white/8 px-3 py-2">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#9f1118] text-xs font-bold text-white">
+                        {userInitial}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-white/92">{userLabel}</p>
+                        <p className="truncate text-[0.65rem] text-white/65">{statusLabel}</p>
+                      </div>
+                    </div>
+                    <Link
+                      href={accountEntryHref}
+                      onClick={closeMenu}
+                      className="block rounded-full border border-white/20 px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/92"
+                    >
+                      {accountEntryLabel}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="flex w-full items-center justify-center gap-2 rounded-full bg-[#9f1118] px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-3 flex gap-2">
+                    <Link
+                      href="/sign-in"
+                      onClick={closeMenu}
+                      className="flex-1 rounded-full px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-white/10"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/sign-up"
+                      onClick={closeMenu}
+                      className="flex-1 rounded-full bg-[#9f1118] px-4 py-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
@@ -98,9 +145,9 @@ export const Navbar = () => {
         <motion.nav
           layout
           transition={NAVBAR_TRANSITIONS.shell}
-          className="pointer-events-auto grid grid-cols-[auto_auto_auto] items-center gap-x-6 md:gap-x-[320px]"
+          className="pointer-events-auto grid w-full max-w-[1240px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4"
         >
-          <div className="flex w-[170px] justify-center">
+          <div className="flex w-[170px] justify-start">
             <motion.div
               layout
               transition={NAVBAR_TRANSITIONS.island}
@@ -120,7 +167,7 @@ export const Navbar = () => {
             </motion.div>
           </div>
 
-          <div className="hidden w-[370px] justify-center sm:flex">
+          <div className="hidden min-w-0 justify-center xl:flex">
             <motion.div
               key="center-island"
               layout
@@ -128,23 +175,23 @@ export const Navbar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -14 }}
               transition={NAVBAR_TRANSITIONS.reveal}
-              className="flex h-14 items-center rounded-full bg-white/5 px-8 backdrop-blur-2xl"
+              className="flex h-14 min-w-0 max-w-full items-center rounded-full bg-white/5 px-5 backdrop-blur-2xl"
             >
-              <div className="flex items-center gap-9">
-                {NAV_LINKS.map((item) => (
-                  <a
+              <div className="flex max-w-full items-center gap-6 overflow-x-auto whitespace-nowrap pr-1">
+                {visibleLinks.map((item) => (
+                  <Link
                     key={item.label}
                     href={item.href}
-                    className="text-[0.8rem] font-medium uppercase tracking-[0.3em] text-white/88"
+                    className="text-[0.72rem] font-medium uppercase tracking-[0.22em] text-white/88"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </motion.div>
           </div>
 
-          <div className="flex w-[236px] justify-center">
+          <div className="flex justify-end">
             <motion.div
               key="right-island"
               layout
@@ -154,18 +201,47 @@ export const Navbar = () => {
               transition={NAVBAR_TRANSITIONS.reveal}
               className="flex h-14 items-center gap-2 rounded-full bg-white/5 px-3 backdrop-blur-2xl"
             >
-              <Link
-                href="/sign-in"
-                className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/sign-up"
-                className="rounded-full bg-[#9f1118] px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
-              >
-                Sign Up
-              </Link>
+              {showAuthenticated ? (
+                <>
+                  <Link
+                    href={accountEntryHref}
+                    className="rounded-full border border-white/20 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/92"
+                  >
+                    {accountEntryLabel}
+                  </Link>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#9f1118] text-xs font-bold text-white">
+                      {userInitial}
+                    </span>
+                    <span className="max-w-[84px] truncate text-xs font-semibold uppercase tracking-[0.12em] text-white/92">{userLabel}</span>
+                    <UserRound className="h-3.5 w-3.5 text-white/75" />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={logout}
+                    aria-label="Logout"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#9f1118] text-white"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/sign-in"
+                    className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    className="rounded-full bg-[#9f1118] px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </motion.div>
           </div>
         </motion.nav>
