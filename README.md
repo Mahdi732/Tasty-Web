@@ -1,67 +1,149 @@
-## Tasty Web Test Console
+﻿# Tasty Web (Frontend)
 
-This web app contains a simple real frontend for testing the 3 backend services:
+This is the customer-facing and operator-facing web app for Tasty.
+It uses Next.js (App Router) and talks only to the API Gateway.
 
-- `userService` (auth)
-- `restaurantService` (restaurant/menu)
-- `orderService` (orders/qr)
+## What This App Includes
 
-### Environment
+- Full auth lifecycle UI:
+  - sign up
+  - sign in
+  - email verification
+  - phone verification
+  - face + card activation flow
+- Public restaurant browsing and menu pages
+- Cart + checkout with:
+  - delivery or pickup
+  - pay now (`PAY_ON_APP`) or pay later (`PAY_LATER`)
+  - QR token confirmation after order creation
+- Orders history for customer
+- Manager console (restaurant onboarding and management)
+- Abonnement page for owner subscription flow
+- Ops QR console:
+  - scan QR
+  - list ops orders
+  - mark driver arrived
 
-Copy `.env.example` to `.env.local` and adjust if needed:
+## Tech Stack
 
-- `NEXT_PUBLIC_AUTH_API`
-- `NEXT_PUBLIC_RESTAURANT_API`
-- `NEXT_PUBLIC_ORDER_API`
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Zustand for auth/cart state
+- Framer Motion for animations
 
-### Run
+## Architecture
+
+```text
+src/
+  app/                Next.js routes (pages)
+  api/                API base + endpoint builders + HTTP client
+  services/           Domain logic (auth, commerce, cart, navbar)
+  components/         Reusable UI components
+  views/              High-level page assemblies (home)
+```
+
+## Backend Contract Rule
+
+The frontend must call API Gateway only.
+Do not call `userService`, `orderService`, `restaurantService`, or any internal service directly from browser code.
+
+Gateway base URL is configured by `NEXT_PUBLIC_API_BASE_URL`.
+
+## Environment
+
+Create `.env.local` in this folder:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+NEXT_PUBLIC_AUTH_BASE_PATH=/api/v1/auth
+NEXT_PUBLIC_ACTIVATE_ACCOUNT_PATH=/api/v1/activate-account
+NEXT_PUBLIC_AUTH_PROFILE_PATH=/api/v1/auth/me
+```
+
+Notes:
+- Local gateway HTTP (`8080`) is recommended for browser cert reliability in dev.
+- The API client includes localhost HTTPS->HTTP fallback and auth refresh retry behavior.
+
+## Install
 
 ```bash
 npm install
-npm run dev
 ```
 
-Open `http://localhost:3000`.
-
-### What you can test from UI
-
-- Register / verify email / login / profile read
-- Create restaurant / assign staff / publish / archive / restore-fee hook / low-stock hook
-- Create orders for all flow branches, list orders, scan QR
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
+## Run (Dev)
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Default URL:
+- `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build + Start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Lint
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Main User Flows
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Register -> Verify Email -> Verify Phone -> Verify Face/Card -> Active account
+2. Browse restaurants and menu
+3. Add to cart
+4. Checkout:
+   - choose fulfillment mode
+   - choose payment mode
+   - order creation + QR token
+5. View order history
 
-## Deploy on Vercel
+## Operator Flows
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Manager flow:
+  - create draft restaurant
+  - pay abonnement
+  - manage categories, menu items, publish/archive operations
+- Ops flow:
+  - scan order QR
+  - mark driver arrived
+  - load restaurant or all ops orders
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Important Files
+
+- API client: `src/api/client.ts`
+- Endpoint map: `src/api/endpoints.ts`
+- Auth service API: `src/services/auth/api.ts`
+- Commerce service API: `src/services/commerce/api.ts`
+- Global navbar shell: `src/components/layout/GlobalNavbar.tsx`
+
+## Troubleshooting
+
+### Navbar not visible on page
+- Navbar is intentionally hidden on auth/verification callback routes.
+- Check `src/components/layout/GlobalNavbar.tsx` hide list.
+
+### 401 on protected API calls
+- Client performs refresh retry automatically.
+- Ensure backend gateway refresh path works and cookies are allowed.
+
+### CORS/auth issues
+- Confirm gateway URL is correct.
+- Confirm backend stack is running and gateway can reach internal services.
+
+## Demo Credentials and Seed
+
+Use backend seed commands from backend README to generate demo users and restaurants.
+
+## Additional Docs
+
+- Backend operational docs: `../backend/README.md`
+- Postman testing: `../backend/POSTMAN_TESTING_GUIDE.md`
+- Full backend analysis: `../backend/AnalysisReadme.md`
